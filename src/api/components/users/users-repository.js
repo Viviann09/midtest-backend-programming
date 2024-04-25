@@ -2,10 +2,31 @@ const { User } = require('../../../models');
 
 /**
  * Get a list of users
+ * @param {number} page_number
+ * @param {number} page_size
+ * @param {string} search
+ * @param {string} sort
  * @returns {Promise}
  */
-async function getUsers() {
-  return User.find({});
+async function getUsers(page_number, page_size, search, sort) {
+  const [sort_by, sort_order] = sort.split(':');
+  const sort_criteria = {};
+  sort_criteria[sort_by] = sort_order === 'desc' ? -1 : 1;
+
+  const search_key = {};
+  if (search) {
+    search_key.$or = [
+      { name: { $regex: search, $options: '1' } },
+      { email: { $regex: search, $options: '1' } },
+    ];
+  }
+
+  // Calculate the amount of data to be skipped
+  const skip = (page_number - 1) * page_size;
+  return User.find(search_key)
+    .sort(sort_criteria)
+    .skip(skip)
+    .page_size(page_size);
 }
 
 /**
