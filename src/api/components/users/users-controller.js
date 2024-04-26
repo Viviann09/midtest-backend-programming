@@ -10,19 +10,25 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  */
 async function getUsers(request, response, next) {
   try {
-    const page_number = parseInt(req.query.page_number) - 1 || 0;
-    const page_size = parseInt(req.query.page_size) || 5;
-    const search = req.query.search || '';
+    const page_number = parseInt(request.query.page_number) - 1 || 0;
+    const page_size = parseInt(request.query.page_size) || 5;
+    const search = request.query.search || '';
     const sort = request.query.sort || 'email:asc';
 
-    const user = await usersService.getUser(
+    const users = await usersService.getUsers(
       page_number,
       page_size,
       search,
       sort
     );
+    // if (!user) {
+    //   throw errorResponder(
+    //     errorTypes.INVALID_CREDENTIALS,
+    //     'wrong email or password'
+    //   );
+    // }
 
-    return response.status(200).json(user);
+    return response.status(200).json(users);
   } catch (error) {
     return next(error);
   }
