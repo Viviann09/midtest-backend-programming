@@ -7,12 +7,37 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  * @param {number} page_size
  * @param {string} search
  * @param {string} sort
- * @param {boolean} has_previous_page
- * @param {boolean} has_next_page
  * @returns {Array}
  */
-async function getUsers() {
-  const users = await usersRepository.getUsers();
+async function getUsers(page_number, page_size, search, sort) {
+  const users = await usersRepository.getUsers(
+    page_number,
+    page_size,
+    search,
+    sort
+  );
+  const count = await usersRepository.countUsers(
+    page_number,
+    page_size,
+    search
+  );
+
+  const total_pages = Math.ceil(count / page_size);
+
+  // const has_previous_page = {
+  //   if(page_number < 1) {
+  //     return true;
+  //   }else if {
+  //     return false;
+  //   }
+  //   },
+  // };
+
+  const has_next_page = {
+    if(has_next_page = page_number > total_page) {
+      return false;
+    },
+  };
 
   const user_results = [];
   for (let i = 0; i < users.length; i += 1) {
@@ -24,30 +49,21 @@ async function getUsers() {
     });
   }
 
-  // //temp
+  // temp;
   // const has_previous_page = 1;
   // const has_next_page = 1;
-  // const length = 1;
+  // const count = 1;
   // const total_pages = 1;
 
-  // const has_next_page = {
-  //   if(!has_next_page){
-  //    return false;
-  //   }
-  //   else {
-  //     return true;
-  //   }
-  // }
-
-  // const results = {
-  //   page_number: page_number + 1,
-  //   page_size: page_size,
-  //   count: length,
-  //   total_pages: total_pages,
-  //   has_previous_page: has_previous_page,
-  //   has_next_page: has_next_page,
-  //   data: user_results,
-  // };
+  const results = {
+    page_number: page_number + 1,
+    page_size: page_size,
+    count: count,
+    total_pages: total_pages,
+    has_previous_page: has_previous_page,
+    has_next_page: has_next_page,
+    data: user_results,
+  };
 
   return results;
 }

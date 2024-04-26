@@ -9,12 +9,6 @@ const { User } = require('../../../models');
  * @returns {Promise}
  */
 async function getUsers(page_number, page_size, search, sort) {
-  sort = sort.split(':');
-  const sort_field = sort[0];
-  const sort_order = sort[1];
-  let sort_by = {};
-  sort_by[sort_field] = sort_order;
-
   search = search.split(':');
   const search_field = search[0];
   const search_key = search[1];
@@ -24,10 +18,29 @@ async function getUsers(page_number, page_size, search, sort) {
   } else if (search_field == 'name') {
     search_ = { name: { $regex: search_key, $options: 'i' } };
   }
+
+  sort = sort.split(':');
+  const sort_field = sort[0];
+  const sort_order = sort[1];
+  let sort_by = {};
+  sort_by[sort_field] = sort_order;
+
   // Calculate the amount of data to be skipped
   const skip = page_number * page_size;
 
   return User.find(search_).sort(sort_by).skip(skip).limit(page_size);
+}
+
+// count total of data
+async function countUsers(page_number, page_size, search_field, search_key) {
+  let count = {};
+  if (search_field && search_key) {
+    count[search_field] = { $regex: search_key, $options: 'i' };
+  }
+
+  const skip = page_number * page_size;
+
+  return User.countDocuments(count).skip(skip).limit(page_size);
 }
 
 /**
@@ -105,6 +118,7 @@ async function changePassword(id, password) {
 
 module.exports = {
   getUsers,
+  countUsers,
   getUser,
   createUser,
   updateUser,

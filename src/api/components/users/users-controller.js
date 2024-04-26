@@ -21,12 +21,6 @@ async function getUsers(request, response, next) {
       search,
       sort
     );
-    // if (!user) {
-    //   throw errorResponder(
-    //     errorTypes.INVALID_CREDENTIALS,
-    //     'wrong email or password'
-    //   );
-    // }
 
     return response.status(200).json(users);
   } catch (error) {
