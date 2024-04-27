@@ -22,22 +22,20 @@ async function getUsers(page_number, page_size, search, sort) {
     search
   );
 
-  const total_pages = Math.ceil(count / page_size);
+  let total_pages = Math.ceil(count / page_size);
+  if (count % page_size != 0) {
+    total_pages = total_pages + 1;
+  }
 
-  // const has_previous_page = {
-  //   if(page_number < 1) {
-  //     return true;
-  //   }else if {
-  //     return false;
-  //   }
-  //   },
-  // };
+  let has_previous_page = true;
+  if (page_number < 1) {
+    has_previous_page = false;
+  }
 
-  const has_next_page = {
-    if(has_next_page = page_number > total_page) {
-      return false;
-    },
-  };
+  let has_next_page = true;
+  if (page_number > total_pages) {
+    has_next_page = false;
+  }
 
   const user_results = [];
   for (let i = 0; i < users.length; i += 1) {
@@ -48,12 +46,6 @@ async function getUsers(page_number, page_size, search, sort) {
       email: user.email,
     });
   }
-
-  // temp;
-  // const has_previous_page = 1;
-  // const has_next_page = 1;
-  // const count = 1;
-  // const total_pages = 1;
 
   const results = {
     page_number: page_number + 1,

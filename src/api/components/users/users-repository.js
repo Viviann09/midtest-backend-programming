@@ -34,8 +34,10 @@ async function getUsers(page_number, page_size, search, sort) {
 // count total of data
 async function countUsers(page_number, page_size, search_field, search_key) {
   let count = {};
-  if (search_field && search_key) {
-    count[search_field] = { $regex: search_key, $options: 'i' };
+  if (search_field == 'email') {
+    count = { email: { $regex: search_key, $options: 'i' } };
+  } else if (search_field == 'name') {
+    count = { name: { $regex: search_key, $options: 'i' } };
   }
 
   const skip = page_number * page_size;
