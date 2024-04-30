@@ -16,11 +16,7 @@ async function getUsers(page_number, page_size, search, sort) {
     search,
     sort
   );
-  const count = await usersRepository.countUsers(
-    page_number,
-    page_size,
-    search
-  );
+  const count = await usersRepository.countUsers(search);
 
   let total_pages = Math.ceil(count / page_size);
   if (count % page_size != 0) {

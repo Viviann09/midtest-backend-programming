@@ -22,11 +22,13 @@ async function checkLoginCredentials(email, password) {
   // login attempt as successful when the `user` is found (by email) and
   // the password matches.
   if (user && passwordChecked) {
+    const currentTime = new Date().toLocaleString();
     return {
       email: user.email,
       name: user.name,
       user_id: user.id,
       token: generateToken(user.email, user.id),
+      message: `succesfull login at : ${currentTime}`,
     };
   }
 

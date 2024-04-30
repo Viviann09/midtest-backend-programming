@@ -8,10 +8,32 @@ const authenticationServices = require('./authentication-service');
  * @param {object} next - Express route middlewares
  * @returns {object} Response object or pass an error to the next route
  */
+const login_attempts_limit = {};
 async function login(request, response, next) {
   const { email, password } = request.body;
-
   try {
+    const current_time = new Date().getTime();
+    const current_time_ = new Date().toLocaleString();
+
+    if (
+      login_attempts_limit[email] &&
+      login_attempts_limit[email].attempts_ >= 5
+    ) {
+      let attempts_limit = login_attempts_limit[email].last_attempt.getTime();
+      attempts_limit = attempts_limit + 1 * 60 * 1000;
+      if (attempts_limit > current_time) {
+        throw errorResponder(
+          errorTypes.FORBIDDEN,
+          `Too many failed login attempts at ${current_time_}. wait 30 minutes to login again`
+        );
+      } else {
+        login_attempts_limit[email] = {
+          attempts_: 0,
+          last_attempt: new Date(),
+        };
+      }
+    }
+
     // Check login credentials
     const loginSuccess = await authenticationServices.checkLoginCredentials(
       email,
@@ -19,9 +41,18 @@ async function login(request, response, next) {
     );
 
     if (!loginSuccess) {
+      if (!login_attempts_limit[email]) {
+        login_attempts_limit[email] = {
+          attempts_: 1,
+          last_attempt: new Date(),
+        };
+      } else {
+        login_attempts_limit[email].attempts_++;
+        login_attempts_limit[email].last_attempt = new Date();
+      }
       throw errorResponder(
         errorTypes.INVALID_CREDENTIALS,
-        'Wrong email or password'
+        `Wrong email or password. Login attempt = ${login_attempts_limit[email].attempts_}. Login Unsuccess at ${current_time_}. Please fill with the correct email and password.`
       );
     }
 
