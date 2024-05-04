@@ -25,10 +25,7 @@ async function getUsers(page_number, page_size, search, sort) {
     has_previous_page = false;
   }
 
-  let has_next_page = true;
-  if (page_number > total_pages) {
-    has_next_page = false;
-  }
+  let has_next_page = page_number < total_pages - 1;
 
   const user_results = [];
   for (let i = 0; i < users.length; i += 1) {

@@ -62,7 +62,7 @@ async function login(request, response, next) {
 
         throw errorResponder(
           errorTypes.INVALID_CREDENTIALS,
-          `Wrong email or password. Login attempt = ${login_attempts}. Login Unsuccess at ${current_time_}. Please fill with the correct email and password.`
+          `Wrong email or password. Login attempt = ${login_attempts}. Login Unsuccessful at ${current_time_}. Please fill with the correct email and password.`
         );
       } else {
         await authenticationServices.deleteAttempt(email);
