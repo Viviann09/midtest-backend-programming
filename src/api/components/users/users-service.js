@@ -19,9 +19,6 @@ async function getUsers(page_number, page_size, search, sort) {
   const count = await usersRepository.countUsers(search);
 
   let total_pages = Math.ceil(count / page_size);
-  if (count % page_size != 0) {
-    total_pages = total_pages + 1;
-  }
 
   let has_previous_page = true;
   if (page_number < 1) {

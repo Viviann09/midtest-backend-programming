@@ -8,55 +8,67 @@ const authenticationServices = require('./authentication-service');
  * @param {object} next - Express route middlewares
  * @returns {object} Response object or pass an error to the next route
  */
-const login_attempts_limit = {};
+
 async function login(request, response, next) {
   const { email, password } = request.body;
   try {
-    const current_time = new Date().getTime();
-    const current_time_ = new Date().toLocaleString();
+    let login_attempts = await authenticationServices.getAttempt(email);
+    if (!login_attempts) {
+      login_attempts = 0;
+    }
 
-    if (
-      login_attempts_limit[email] &&
-      login_attempts_limit[email].attempts_ >= 5
-    ) {
-      let attempts_limit = login_attempts_limit[email].last_attempt.getTime();
-      attempts_limit = attempts_limit + 1 * 60 * 1000;
-      if (attempts_limit > current_time) {
+    if (login_attempts == 5) {
+      const current_time = new Date().getTime();
+      const current_time_ = new Date().toLocaleString();
+      const attemptsLimit = await authenticationServices.getTimeout(email);
+      if (!attemptsLimit) {
+        await authenticationServices.createTime(email, current_time_);
+        throw errorResponder(
+          errorTypes.FORBIDDEN,
+          `Too many failed login attempts at ${current_time_}. wait 30 minutes to login again`
+        );
+      }
+      const limit = attemptsLimit.getTime();
+      const limit_ = limit + 30 * 60 * 1000;
+
+      if (limit_ > current_time) {
         throw errorResponder(
           errorTypes.FORBIDDEN,
           `Too many failed login attempts at ${current_time_}. wait 30 minutes to login again`
         );
       } else {
-        login_attempts_limit[email] = {
-          attempts_: 0,
-          last_attempt: new Date(),
-        };
+        const delete_attempt =
+          await authenticationServices.deleteAttempt(email);
+        await authenticationServices.deleteTime(email);
+        if (delete_attempt == true) {
+          login(request, response, next);
+        }
       }
-    }
-
-    // Check login credentials
-    const loginSuccess = await authenticationServices.checkLoginCredentials(
-      email,
-      password
-    );
-
-    if (!loginSuccess) {
-      if (!login_attempts_limit[email]) {
-        login_attempts_limit[email] = {
-          attempts_: 1,
-          last_attempt: new Date(),
-        };
-      } else {
-        login_attempts_limit[email].attempts_++;
-        login_attempts_limit[email].last_attempt = new Date();
-      }
-      throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
-        `Wrong email or password. Login attempt = ${login_attempts_limit[email].attempts_}. Login Unsuccess at ${current_time_}. Please fill with the correct email and password.`
+    } else if (login_attempts < 5) {
+      // Check login credentials
+      const loginSuccess = await authenticationServices.checkLoginCredentials(
+        email,
+        password
       );
-    }
 
-    return response.status(200).json(loginSuccess);
+      if (!loginSuccess) {
+        login_attempts = login_attempts + 1;
+        if (login_attempts == 1) {
+          await authenticationServices.createAttempt(email, login_attempts);
+        } else {
+          await authenticationServices.updateAttempt(email, login_attempts);
+        }
+        const current_time_ = new Date().toLocaleString();
+
+        throw errorResponder(
+          errorTypes.INVALID_CREDENTIALS,
+          `Wrong email or password. Login attempt = ${login_attempts}. Login Unsuccess at ${current_time_}. Please fill with the correct email and password.`
+        );
+      } else {
+        await authenticationServices.deleteAttempt(email);
+        return response.status(200).json(loginSuccess);
+      }
+    }
   } catch (error) {
     return next(error);
   }

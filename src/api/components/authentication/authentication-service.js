@@ -35,6 +35,117 @@ async function checkLoginCredentials(email, password) {
   return null;
 }
 
+/**
+ * Create new attempt
+ * @param {string} email - Email
+ * @param {number} attempt - Attempt
+ * @returns {boolean}
+ */
+async function createAttempt(email, attempt) {
+  try {
+    await authenticationRepository.createAttempt(email, attempt);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Get attempt detail
+ * @param {string} email - Email
+ * @returns {Object}
+ */
+async function getAttempt(email) {
+  const get_attempt = await authenticationRepository.getAttempt(email);
+  if (!get_attempt) {
+    return null;
+  }
+  return get_attempt.attempt;
+}
+
+/**
+ * Update existing attempt
+ * @param {string} email - Email
+ * @param {number} attempt - Attempt
+ * @returns {boolean}
+ */
+async function updateAttempt(email, attempt) {
+  try {
+    await authenticationRepository.updateAttempt(email, attempt);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Delete Attempt
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function deleteAttempt(email) {
+  try {
+    await authenticationRepository.deleteAttempt(email);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Create new time
+ * @param {string} email - Email
+ * @param {time} time - Time
+ * @returns {boolean}
+ */
+async function createTime(email, time) {
+  try {
+    await authenticationRepository.createTime(email, time);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+/**
+ * Get time detail
+ * @param {string} email - Email
+ * @returns {Object}
+ */
+async function getTimeout(email) {
+  const get_time = await authenticationRepository.getTimeout(email);
+  if (!get_time) {
+    return null;
+  }
+  return get_time.time;
+}
+
+/**
+ * Delete time
+ * @param {string} email - Email
+ * @returns {boolean}
+ */
+async function deleteTime(email) {
+  try {
+    await authenticationRepository.deleteTime(email);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
 module.exports = {
   checkLoginCredentials,
+  createAttempt,
+  getAttempt,
+  updateAttempt,
+  deleteAttempt,
+  createTime,
+  getTimeout,
+  deleteTime,
 };
