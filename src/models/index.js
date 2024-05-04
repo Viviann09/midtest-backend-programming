@@ -5,6 +5,7 @@ const logger = require('../core/logger')('app');
 const usersSchema = require('./users-schema');
 const authenticationsSchema = require('./authentication-schema');
 const authenticationtimesSchema = require('./authentication-schema-time');
+const accountsSchema = require('./account-schema');
 
 mongoose.connect(`${config.database.connection}/${config.database.name}`, {
   useNewUrlParser: true,
@@ -25,9 +26,12 @@ const Authenticationtime = mongoose.model(
   mongoose.Schema(authenticationtimesSchema)
 );
 
+const Account = mongoose.model('accounts', mongoose.Schema(accountsSchema));
+
 module.exports = {
   mongoose,
   User,
   Authentication,
   Authenticationtime,
+  Account,
 };
