@@ -27,6 +27,8 @@ async function getAccountId(id) {
  * @param {string} name - Name
  * @param {string} email - Email
  * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
  * @param {string} nik - Nik
  * @param {string} access_code - Access code
  * @param {string} account_number - Account number
@@ -38,6 +40,8 @@ async function createAccount(
   name,
   email,
   phone_number,
+  birthDate,
+  address,
   nik,
   access_code,
   account_number,
@@ -48,6 +52,8 @@ async function createAccount(
     name,
     email,
     phone_number,
+    birthDate,
+    address,
     nik,
     access_code,
     account_number,
@@ -59,17 +65,45 @@ async function createAccount(
 /**
  * Update existing account
  * @param {string} id - id
+ * @param {string} name - Name
+ * @param {string} email - Email
  * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
+ * @param {string} nik - Nik
+ * @param {string} access_code - Access code
+ * @param {string} account_number - Account number
+ * @param {string} account_balance - Account balance
+ * @param {string} password - Password
  * @returns {Promise}
  */
-async function updateAccount(id, phone_number) {
+async function updateAccount(
+  id,
+  name,
+  email,
+  phone_number,
+  birthDate,
+  address,
+  nik,
+  access_code,
+  account_number,
+  account_balance
+) {
   return Account.updateOne(
     {
       _id: id,
     },
     {
       $set: {
+        name,
+        email,
         phone_number,
+        birthDate,
+        address,
+        nik,
+        access_code,
+        account_number,
+        account_balance,
       },
     }
   );

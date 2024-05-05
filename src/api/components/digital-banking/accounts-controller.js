@@ -50,6 +50,8 @@ async function createAccount(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
     const phone_number = request.body.phone_number;
+    const birthDate = request.body.birthDate;
+    const address = request.body.address;
     const nik = request.body.nik;
     const access_code = request.body.access_code;
     const account_number = request.body.account_number;
@@ -69,6 +71,8 @@ async function createAccount(request, response, next) {
       name,
       email,
       phone_number,
+      birthDate,
+      address,
       nik,
       access_code,
       account_number,
@@ -82,7 +86,17 @@ async function createAccount(request, response, next) {
       );
     }
 
-    return response.status(200).json({ name, account_number });
+    return response.status(200).json({
+      name,
+      email,
+      phone_number,
+      birthDate,
+      address,
+      nik,
+      access_code,
+      account_number,
+      account_balance,
+    });
   } catch (error) {
     return next(error);
   }
@@ -98,17 +112,47 @@ async function createAccount(request, response, next) {
 async function updateAccount(request, response, next) {
   try {
     const id = request.params.id;
+    const name = request.body.name;
+    const email = request.body.email;
     const phone_number = request.body.phone_number;
+    const birthDate = request.body.birthDate;
+    const address = request.body.address;
+    const nik = request.body.nik;
+    const access_code = request.body.access_code;
+    const account_number = request.body.account_number;
+    const account_balance = request.body.account_balance;
 
-    const success = await accountsService.updateAccount(id, phone_number);
+    const success = await accountsService.updateAccount(
+      id,
+      name,
+      email,
+      phone_number,
+      birthDate,
+      address,
+      nik,
+      access_code,
+      account_number,
+      account_balance
+    );
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
-        'Failed to update phone number'
+        'Failed to update account'
       );
     }
 
-    return response.status(200).json({ id });
+    return response.status(200).json({
+      id,
+      name,
+      email,
+      phone_number,
+      birthDate,
+      address,
+      nik,
+      access_code,
+      account_number,
+      account_balance,
+    });
   } catch (error) {
     return next(error);
   }

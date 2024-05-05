@@ -4,13 +4,36 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
 /**
  * Get list of accounts
  * @param {string} name - Name
+ * @param {string} email - Email
+ * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
+ * @param {string} nik - Nik
+ * @param {string} access_code - Access code
  * @param {string} account_number - Account number
  * @param {string} account_balance - Account balance
+ * @param {string} password - Password
  * @returns {Array}
  */
-async function getAccounts(name, account_number, account_balance) {
+async function getAccounts(
+  name,
+  email,
+  phone_number,
+  birthDate,
+  address,
+  nik,
+  access_code,
+  account_number,
+  account_balance
+) {
   const accounts = await accountsRepository.getAccounts(
     name,
+    email,
+    phone_number,
+    birthDate,
+    address,
+    nik,
+    access_code,
     account_number,
     account_balance
   );
@@ -20,6 +43,12 @@ async function getAccounts(name, account_number, account_balance) {
     const account = accounts[i];
     results.push({
       name: account.name,
+      email: account.email,
+      phone_number: account.phone_number,
+      birthDate: account.birtDate,
+      address: account.address,
+      nik: account.nik,
+      access_code: account.access_code,
       account_number: account.account_number,
       account_balance: account.account_balance,
     });
@@ -31,8 +60,15 @@ async function getAccounts(name, account_number, account_balance) {
 /**
  * Get account detail
  * @param {string} id - id
- * @param {string} account_number - account number
- * @param {string} account_balance - account balance
+ * @param {string} name - Name
+ * @param {string} email - Email
+ * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
+ * @param {string} nik - Nik
+ * @param {string} access_code - Access code
+ * @param {string} account_number - Account number
+ * @param {string} account_balance - Account balance
  * @returns {Object}
  */
 async function getAccount(id) {
@@ -45,6 +81,12 @@ async function getAccount(id) {
 
   return {
     name: account.name,
+    email: account.email,
+    phone_number: account.phone_number,
+    birthDate: account.birtDate,
+    address: account.address,
+    nik: account.nik,
+    access_code: account.access_code,
     account_number: account.account_number,
     account_balance: account.account_balance,
   };
@@ -52,13 +94,16 @@ async function getAccount(id) {
 
 /**
  * Create new account
+ * @param {string} id - id
  * @param {string} name - Name
  * @param {string} email - Email
  * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
  * @param {string} nik - Nik
  * @param {string} access_code - Access code
  * @param {string} account_number - Account number
- * @param {string} account_balance - account balance
+ * @param {string} account_balance - Account balance
  * @param {string} password - Password
  * @returns {boolean}
  */
@@ -66,6 +111,8 @@ async function createAccount(
   name,
   email,
   phone_number,
+  birthDate,
+  address,
   nik,
   access_code,
   account_number,
@@ -80,6 +127,8 @@ async function createAccount(
       name,
       email,
       phone_number,
+      birthDate,
+      address,
       nik,
       access_code,
       account_number,
@@ -96,11 +145,41 @@ async function createAccount(
 /**
  * Update existing account
  * @param {string} id - id
+ * @param {string} name - Name
+ * @param {string} email - Email
  * @param {string} phone_number - phone number
+ * @param {date} birthDate - birth date
+ * @param {string} address - address
+ * @param {string} nik - Nik
+ * @param {string} access_code - Access code
+ * @param {string} account_number - Account number
+ * @param {string} account_balance - Account balance
  * @returns {boolean}
  */
-async function updateAccount(id, phone_number) {
-  const account = await accountsRepository.getAccountId(id);
+async function updateAccount(
+  id,
+  name,
+  email,
+  phone_number,
+  birthDate,
+  address,
+  nik,
+  access_code,
+  account_number,
+  account_balance
+) {
+  const account = await accountsRepository.getAccountId(
+    id,
+    name,
+    email,
+    phone_number,
+    birthDate,
+    address,
+    nik,
+    access_code,
+    account_number,
+    account_balance
+  );
 
   // Account not found
   if (!account) {
@@ -108,7 +187,18 @@ async function updateAccount(id, phone_number) {
   }
 
   try {
-    await accountsRepository.updateAccount(id, phone_number);
+    await accountsRepository.updateAccount(
+      id,
+      name,
+      email,
+      phone_number,
+      birthDate,
+      address,
+      nik,
+      access_code,
+      account_number,
+      account_balance
+    );
   } catch (err) {
     return null;
   }
