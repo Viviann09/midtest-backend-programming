@@ -1,4 +1,4 @@
-const { errorResponder, errorTypes } = require('../../../../core/errors');
+const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServiceDigitalBankings = require('./authentication-service-digital-banking');
 
 /**
@@ -9,13 +9,13 @@ const authenticationServiceDigitalBankings = require('./authentication-service-d
  * @returns {object} Response object or pass an error to the next route
  */
 async function login(request, response, next) {
-  const { account_number, password } = request.body;
+  const { email, password } = request.body;
 
   try {
     // Check login credentials
     const loginSuccess =
-      await authenticationServiceDigitalBankings.checkLoginCredentials(
-        account_number,
+      await authenticationServiceDigitalBankings.checkLoginCredentialss(
+        email,
         password
       );
 

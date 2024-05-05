@@ -26,9 +26,7 @@ async function getAccounts(request, response, next) {
  */
 async function getAccount(request, response, next) {
   try {
-    const account = await accountsService.getAccount(
-      request.params.account_number
-    );
+    const account = await accountsService.getAccount(request.params.id);
 
     if (!account) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown account');
@@ -50,9 +48,12 @@ async function getAccount(request, response, next) {
 async function createAccount(request, response, next) {
   try {
     const name = request.body.name;
+    const email = request.body.email;
     const phone_number = request.body.phone_number;
     const nik = request.body.nik;
     const access_code = request.body.access_code;
+    const account_number = request.body.account_number;
+    const account_balance = request.body.account_balance;
     const password = request.body.password;
     const password_confirm = request.body.password_confirm;
 
@@ -66,8 +67,12 @@ async function createAccount(request, response, next) {
 
     const success = await accountsService.createAccount(
       name,
+      email,
       phone_number,
       nik,
+      access_code,
+      account_number,
+      account_balance,
       password
     );
     if (!success) {
@@ -92,9 +97,10 @@ async function createAccount(request, response, next) {
  */
 async function updateAccount(request, response, next) {
   try {
-    const phone_number = request.params.phone_number;
+    const id = request.params.id;
+    const phone_number = request.body.phone_number;
 
-    const success = await accountsService.updateAccount(phone_number);
+    const success = await accountsService.updateAccount(id, phone_number);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -102,7 +108,7 @@ async function updateAccount(request, response, next) {
       );
     }
 
-    return response.status(200).json({ account_number });
+    return response.status(200).json({ id });
   } catch (error) {
     return next(error);
   }
@@ -117,9 +123,9 @@ async function updateAccount(request, response, next) {
  */
 async function deleteAccount(request, response, next) {
   try {
-    const account_number = request.params.account_number;
+    const id = request.params.id;
 
-    const success = await accountsService.deleteAccount(account_number);
+    const success = await accountsService.deleteAccount(id);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -127,7 +133,7 @@ async function deleteAccount(request, response, next) {
       );
     }
 
-    return response.status(200).json({ account_number });
+    return response.status(200).json({ id });
   } catch (error) {
     return next(error);
   }
@@ -153,7 +159,7 @@ async function changePassword(request, response, next) {
     // Check old password
     if (
       !(await accountsService.checkPassword(
-        request.params.account_number,
+        request.params.id,
         request.body.password_old
       ))
     ) {
@@ -161,7 +167,7 @@ async function changePassword(request, response, next) {
     }
 
     const changeSuccess = await accountsService.changePassword(
-      request.params.account_number,
+      request.params.id,
       request.body.password_new
     );
 
@@ -172,9 +178,7 @@ async function changePassword(request, response, next) {
       );
     }
 
-    return response
-      .status(200)
-      .json({ account_number: request.params.account_number });
+    return response.status(200).json({ id: request.params.id });
   } catch (error) {
     return next(error);
   }

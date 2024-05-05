@@ -6,9 +6,12 @@ module.exports = {
   createAccount: {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
-      phone_number: joi.string().required().label('Phone_number'),
+      email: joi.string().email().required().label('Email'),
+      phone_number: joi.string().max(13).required().label('Phone_number'),
       nik: joi.string().min(1).max(16).required().label('NIK'),
       access_code: joi.string().max(6).required().label('Access_code'),
+      account_number: joi.string().max(10).required().label('Account_number'),
+      account_balance: joi.string().max(12).required().label('Account_balance'),
       password: joiPassword
         .string()
         .minOfSpecialCharacters(1)
@@ -44,7 +47,6 @@ module.exports = {
 
   updateAccount: {
     body: {
-      account_number: joi.string().max(15).required().label('account_number'),
       phone_number: joi.string().max(12).required().label('phone_number'),
     },
   },

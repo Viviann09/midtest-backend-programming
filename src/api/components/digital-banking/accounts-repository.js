@@ -10,88 +10,105 @@ async function getAccounts() {
 
 /**
  * Get account detail
- * @param {string} account_number - account number
- * @param {string} account_balance - account balance
+ * @param {string} email - Email
+ * @param {string} id - id
  * @returns {Promise}
  */
-async function getAccount(account_number, account_balance) {
-  return Account.findByaccount_number(account_number, account_balance);
+async function getAccount(email) {
+  return Account.findOne({ email });
+}
+
+async function getAccountId(id) {
+  return Account.findById(id);
 }
 
 /**
  * Create new account
  * @param {string} name - Name
+ * @param {string} email - Email
  * @param {string} phone_number - phone number
  * @param {string} nik - Nik
  * @param {string} access_code - Access code
+ * @param {string} account_number - Account number
+ * @param {string} account_balance - Account balance
  * @param {string} password - Password
  * @returns {Promise}
  */
-async function createAccount(name, phone_number, nik, access_code, password) {
+async function createAccount(
+  name,
+  email,
+  phone_number,
+  nik,
+  access_code,
+  account_number,
+  account_balance,
+  password
+) {
   return Account.create({
     name,
+    email,
     phone_number,
     nik,
     access_code,
+    account_number,
+    account_balance,
     password,
   });
 }
 
 /**
- * Update existing user
+ * Update existing account
+ * @param {string} id - id
  * @param {string} phone_number - phone number
  * @returns {Promise}
  */
-async function updateUser(phone_number) {
-  return User.updateOne(
+async function updateAccount(id, phone_number) {
+  return Account.updateOne(
     {
-      _phone_number: phone_number,
+      _id: id,
     },
     {
       $set: {
-        account,
-        account_number,
+        phone_number,
       },
     }
   );
 }
 
 /**
- * Delete a user
- * @param {string} account_number - account number
+ * Delete account
+ * @param {string} id - id
  * @returns {Promise}
  */
-async function deleteAccount(account_number) {
-  return Account.deleteOne({ _account_number: account_number });
+async function deleteAccount(id) {
+  return Account.deleteOne({ _id: id });
 }
 
 /**
- * Get user by account number to prevent duplicate account number
- * @param {string} account_number - account number
+ * Get account by account number to prevent duplicate account number
+ * @param {string} id - id
  * @returns {Promise}
  */
-async function getAccountByAccountNumber(account_number) {
-  return Account.findOne({ account_number });
+async function getAccountByAccountNumber(id) {
+  return Account.findOne({ id });
 }
 
 /**
- * Update user password
- * @param {string} account_number - account number
+ * Update account password
+ * @param {string} id - Account ID
  * @param {string} password - New hashed password
  * @returns {Promise}
  */
-async function changePassword(account_number, password) {
-  return Account.updateOne(
-    { _account_number: account_number },
-    { $set: { password } }
-  );
+async function changePassword(id, password) {
+  return Account.updateOne({ _id: id }, { $set: { password } });
 }
 
 module.exports = {
   getAccounts,
   getAccount,
+  getAccountId,
   createAccount,
-  updateUser,
+  updateAccount,
   deleteAccount,
   getAccountByAccountNumber,
   changePassword,

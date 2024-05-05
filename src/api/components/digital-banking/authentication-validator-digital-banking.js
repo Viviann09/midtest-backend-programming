@@ -1,9 +1,8 @@
 const joi = require('joi');
-
 module.exports = {
   login: {
     body: {
-      access_code: joi.string().max(6).required().label('Access code'),
+      email: joi.string().email().required().label('Email'),
       password: joi.string().required().label('Password'),
     },
   },

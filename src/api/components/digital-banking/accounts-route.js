@@ -21,14 +21,14 @@ module.exports = (app) => {
     accountsControllers.createAccount
   );
 
-  // Get user detail
-  route.get('/:id', authenticationMiddleware, accountsControllers.getAccount);
+  // Get account detail
+  route.get('/:id', digitalBankingMiddleware, accountsControllers.getAccount);
 
-  // Update user
+  // Update Account
   route.put(
     '/:id',
     digitalBankingMiddleware,
-    celebrate(accountsValidator.updateUser),
+    celebrate(accountsValidator.updateAccount),
     accountsControllers.updateAccount
   );
 
@@ -40,7 +40,7 @@ module.exports = (app) => {
     accountsControllers.changePassword
   );
 
-  // Delete user
+  // Delete Account
   route.delete(
     '/:id',
     digitalBankingMiddleware,
