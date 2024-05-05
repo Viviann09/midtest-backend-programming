@@ -17,6 +17,8 @@ async function login(request, response, next) {
       login_attempts = 0;
     }
 
+    // jika sudah attempt 5 kali maka akan keblock dan menampilkan error Too many failed login attempts
+    // jika login dengan email dan password yang benar dengan attempt < 5 maka akan menampilkan success
     if (login_attempts == 5) {
       const current_time = new Date().getTime();
       const current_time_ = new Date().toLocaleString();
