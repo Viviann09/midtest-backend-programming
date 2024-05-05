@@ -74,7 +74,6 @@ async function createAccount(
  * @param {string} access_code - Access code
  * @param {string} account_number - Account number
  * @param {string} account_balance - Account balance
- * @param {string} password - Password
  * @returns {Promise}
  */
 async function updateAccount(

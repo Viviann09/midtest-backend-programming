@@ -12,7 +12,6 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  * @param {string} access_code - Access code
  * @param {string} account_number - Account number
  * @param {string} account_balance - Account balance
- * @param {string} password - Password
  * @returns {Array}
  */
 async function getAccounts(
