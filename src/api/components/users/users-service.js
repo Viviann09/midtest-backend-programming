@@ -16,15 +16,20 @@ async function getUsers(page_number, page_size, search, sort) {
     search,
     sort
   );
+
+  // untuk menghitung users yang ada jika menggunakan search
   const count = await usersRepository.countUsers(search);
 
+  // untuk menghitung total page
   let total_pages = Math.ceil(count / page_size);
 
+  // untuk mengetahui apakah ada halaman sebelumnya
   let has_previous_page = true;
   if (page_number < 1) {
     has_previous_page = false;
   }
 
+  // untuk mengetahui apakah ada halaman berikutnya
   let has_next_page = page_number < total_pages - 1;
 
   const user_results = [];

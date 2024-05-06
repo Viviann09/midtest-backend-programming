@@ -6,8 +6,8 @@ const accountsSchema = {
   address: String,
   nik: Number,
   access_code: String,
-  account_number: String,
-  account_balance: String,
+  account_number: Number,
+  account_balance: Number,
   password: String,
 };
 

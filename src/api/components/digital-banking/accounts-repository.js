@@ -26,13 +26,13 @@ async function getAccountId(id) {
  * Create new account
  * @param {string} name - Name
  * @param {string} email - Email
- * @param {string} phone_number - phone number
+ * @param {number} phone_number - phone number
  * @param {date} birthDate - birth date
  * @param {string} address - address
- * @param {string} nik - Nik
+ * @param {number} nik - Nik
  * @param {string} access_code - Access code
- * @param {string} account_number - Account number
- * @param {string} account_balance - Account balance
+ * @param {number} account_number - Account number
+ * @param {number} account_balance - Account balance
  * @param {string} password - Password
  * @returns {Promise}
  */
@@ -67,13 +67,13 @@ async function createAccount(
  * @param {string} id - id
  * @param {string} name - Name
  * @param {string} email - Email
- * @param {string} phone_number - phone number
+ * @param {number} phone_number - phone number
  * @param {date} birthDate - birth date
  * @param {string} address - address
- * @param {string} nik - Nik
+ * @param {number} nik - Nik
  * @param {string} access_code - Access code
- * @param {string} account_number - Account number
- * @param {string} account_balance - Account balance
+ * @param {number} account_number - Account number
+ * @param {number} account_balance - Account balance
  * @returns {Promise}
  */
 async function updateAccount(

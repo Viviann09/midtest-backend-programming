@@ -7,13 +7,18 @@ module.exports = {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
       email: joi.string().email().required().label('Email'),
-      phone_number: joi.string().max(13).required().label('Phone_number'),
+      phone_number: joi
+        .number()
+        .min(1)
+        .max(13)
+        .required()
+        .label('Phone_number'),
       birthDate: joi.date().required().label('Account birth date'),
       address: joi.string().min(1).max(200).required().label('Address'),
-      nik: joi.string().min(1).max(16).required().label('NIK'),
-      access_code: joi.string().max(6).required().label('Access_code'),
-      account_number: joi.string().max(10).required().label('Account_number'),
-      account_balance: joi.string().max(12).required().label('Account_balance'),
+      nik: joi.number().min(1).max(16).required().label('NIK'),
+      access_code: joi.string().min(1).max(6).required().label('Access_code'),
+      account_number: joi.number().max(10).required().label('Account_number'),
+      account_balance: joi.number().max(12).required().label('Account_balance'),
       password: joiPassword
         .string()
         .minOfSpecialCharacters(1)
@@ -33,13 +38,13 @@ module.exports = {
   getAccount: {
     body: {
       account_number: joi
-        .string()
+        .number()
         .min(1)
         .max(15)
         .required()
         .label('account_number'),
       account_balance: joi
-        .string()
+        .number()
         .min(1)
         .max(13)
         .required()
@@ -49,9 +54,19 @@ module.exports = {
 
   updateAccount: {
     body: {
-      phone_number: joi.string().max(13).required().label('phone_number'),
-      access_code: joi.string().max(6).required().label('Access_code'),
-      account_balance: joi.string().max(12).required().label('Account_balance'),
+      phone_number: joi
+        .number()
+        .min(1)
+        .max(12)
+        .required()
+        .label('phone_number'),
+      access_code: joi.string().min(1).max(6).required().label('Access_code'),
+      account_balance: joi
+        .number()
+        .min(1)
+        .max(12)
+        .required()
+        .label('Account_balance'),
     },
   },
 
